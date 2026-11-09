@@ -9,9 +9,12 @@ This is FontStory, a native Kotlin Android app (no AndroidX/runtime libraries in
 4. Releasing (whenever a new APK is delivered to the user):
    - Bump `VERSION_NAME` in `gradle.properties` (SemVer: fix → patch, feature → minor, breaking/data-format change → major).
    - Move `[Unreleased]` entries into a new `## [X.Y.Z] - YYYY-MM-DD` section and update the compare links at the bottom.
-   - Commit `chore(release): vX.Y.Z`, create annotated tag `vX.Y.Z`, push commit and tag.
-   - Create a GitHub Release for the tag with the changelog section as notes and attach `FontStory-X.Y.Z.apk` (signed release build).
-5. Run `./gradlew assembleRelease testReleaseUnitTest` before releasing.
+   - Commit `chore(release): vX.Y.Z` and push to `master`. Do NOT create the tag or Release yourself:
+     `.github/workflows/release.yml` sees the untagged version, builds + tests, signs with the repo
+     secrets, pushes annotated tag `vX.Y.Z` and publishes the GitHub Release with `FontStory-X.Y.Z.apk`
+     and this version's CHANGELOG section as notes. (Claude sessions cannot create tags/releases directly.)
+5. Run `./gradlew assembleRelease testReleaseUnitTest` locally before pushing a release commit.
+6. After pushing, tell the owner the version and that the Release will appear under Releases when CI finishes.
 
 ## Never
 - Never commit `keystore/`, `keystore.properties`, `*.jks`, `local.properties`, APKs or build output.

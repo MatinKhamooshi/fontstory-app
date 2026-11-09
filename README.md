@@ -61,5 +61,7 @@ Parser tests run on the JVM; render/export tests use Robolectric native graphics
 ## Versioning & releases
 
 - Version lives in `gradle.properties` → `VERSION_NAME` (SemVer). `versionCode` is derived as `major*10000 + minor*100 + patch`.
-- Every release: update `CHANGELOG.md`, bump `VERSION_NAME`, commit, tag `vX.Y.Z`, and publish a GitHub Release with the signed APK attached.
+- Every release: update `CHANGELOG.md`, bump `VERSION_NAME`, commit and push to `master`.
+- CI (`.github/workflows/release.yml`) builds and tests every push. When `VERSION_NAME` has no tag yet, it signs the APK, pushes tag `vX.Y.Z` and publishes a GitHub Release with the APK and the changelog notes.
+- CI signing secrets (Settings → Secrets and variables → Actions): `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`. Without them CI refuses to publish a release.
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `refactor:`, `docs:`, `build:`, `test:`, `chore:`).
