@@ -18,7 +18,9 @@ This is FontStory, a native Kotlin Android app (no AndroidX/runtime libraries in
 
 ## Never
 - Never commit `keystore/`, `keystore.properties`, `*.jks`, `local.properties`, APKs or build output.
-- Never add the INTERNET permission or third-party runtime dependencies without the owner asking.
+- Never add third-party runtime dependencies or new permissions without the owner asking. INTERNET exists only for the updater: keep network access limited to `Updater` (HTTPS, this repo's releases) — no analytics, ads or other endpoints.
+- Never weaken update verification (signature/package/version/SHA-256 checks, host/URL allow-list, HTTPS-only config).
+- The repository is public: never commit secrets, personal data or credentials.
 - Never change `applicationId` (`ir.matinkhamooshi.fontstory`) — updates would stop installing over the old app.
 
 ## Build notes

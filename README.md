@@ -11,7 +11,8 @@ A small, ad-free Android app: import your own fonts in bulk, compose text on an 
 - **Editor** — multiple text layers, drag with centre snapping, pinch to resize, alignment, line spacing.
 - **Partial styling** — select part of the text to change its font, weight, size or colour; with no selection the change applies to the whole layer.
 - **Export** — PNG at 1×/2×/3× (base width 1080), transparent, smart-cropped to the exact text pixels + 1 px.
-- **Private & safe** — no permissions, no internet, no third-party runtime libraries; fonts are validated and stored in app-private storage.
+- **In-app updates** — checks GitHub Releases on launch; one tap downloads and installs the new version.
+- **Private & safe** — internet is used only for update checks (HTTPS, this repo only); update APKs are verified (size, SHA-256, package, version, same signing certificate) before install; no third-party runtime libraries; fonts are validated and stored in app-private storage.
 
 Requires Android 10 (API 29) or newer.
 
@@ -22,6 +23,7 @@ app/src/main/java/ir/matinkhamooshi/fontstory/
 ├── font/    FontParser (sfnt/TTC/fvar), FontImporter (files/ZIP/folders), FontLibrary (storage + typeface cache)
 ├── model/   TextLayer + Marks (per-range styles), Document/ProjectStore, Exporter (render + smart crop + MediaStore)
 ├── ui/      ArtboardView, ColorPicker, adapters, insets helpers
+├── update/  Updater (GitHub Releases check, download, verification), UpdateInstaller (PackageInstaller)
 ├── MainActivity.kt    editor
 └── FontsActivity.kt   font library
 ```

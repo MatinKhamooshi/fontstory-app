@@ -59,6 +59,7 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.all {
+            it.systemProperty("fontstory.netTests", (project.findProperty("fontstory.netTests") ?: "false").toString())
             it.systemProperty("fontstory.testFonts", rootProject.file("testfonts/package").absolutePath)
             it.systemProperty("robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2") }
     }
