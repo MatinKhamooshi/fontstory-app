@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">فونت استوری</string>
+    <string name="fonts">فونت‌ها</string>
+    <string name="export">خروجی PNG</string>
+    <string name="add_text">+ متن جدید</string>
+    <string name="text_hint">متن را بنویسید…</string>
+    <string name="default_text">متن نمونه</string>
+    <string name="hint_no_selection">روی «+ متن جدید» بزنید یا یک متن را روی صفحه لمس کنید.</string>
+    <string name="hint_partial">برای تغییر بخشی از متن، همان بخش را انتخاب کنید. اگر چیزی انتخاب نشده باشد، تغییر روی کل متن اعمال می‌شود.</string>
+    <string name="family">خانواده</string>
+    <string name="weight">وزن</string>
+    <string name="size">سایز</string>
+    <string name="color">رنگ</string>
+    <string name="align_right">راست‌چین</string>
+    <string name="align_center">وسط‌چین</string>
+    <string name="align_left">چپ‌چین</string>
+    <string name="line_spacing">فاصله خطوط</string>
+    <string name="duplicate">کپی</string>
+    <string name="delete">حذف</string>
+    <string name="more">⋮</string>
+    <string name="ok">تأیید</string>
+    <string name="cancel">انصراف</string>
+    <string name="close">بستن</string>
+    <string name="checker">شطرنجی (شفاف)</string>
+    <string name="color_hue">رنگ‌مایه</string>
+    <string name="color_sat">اشباع</string>
+    <string name="color_val">روشنایی</string>
+
+    <string name="export_title">کیفیت خروجی</string>
+    <string name="export_1x">۱ برابر (پایه ۱۰۸۰)</string>
+    <string name="export_2x">۲ برابر (پایه ۲۱۶۰)</string>
+    <string name="export_3x">۳ برابر (پایه ۳۲۴۰)</string>
+    <string name="export_save">ذخیره</string>
+    <string name="export_empty">متنی برای خروجی وجود ندارد.</string>
+    <string name="export_working">در حال ساخت تصویر…</string>
+    <string name="export_done">ذخیره شد در Pictures/FontStory\nابعاد: %1$d × %2$d پیکسل</string>
+    <string name="export_failed">ذخیره‌ی تصویر ناموفق بود.</string>
+    <string name="share">اشتراک‌گذاری</string>
+
+    <string name="menu_artboard">اندازه‌ی صفحه</string>
+    <string name="menu_bg">پس‌زمینه‌ی پیش‌نمایش</string>
+    <string name="menu_clear">پاک کردن همه‌ی متن‌ها</string>
+    <string name="confirm_clear">همه‌ی متن‌ها حذف شوند؟</string>
+    <string name="art_story">استوری ۱۰۸۰ × ۱۹۲۰</string>
+    <string name="art_portrait">پست عمودی ۱۰۸۰ × ۱۳۵۰</string>
+    <string name="art_square">مربع ۱۰۸۰ × ۱۰۸۰</string>
+
+    <string name="fonts_title">کتابخانه‌ی فونت</string>
+    <string name="add_files">افزودن فایل‌ها</string>
+    <string name="add_folder">افزودن پوشه</string>
+    <string name="fonts_empty">هنوز فونتی اضافه نشده.\n\nچند فایل TTF / OTF / TTC یا یک فایل ZIP را با هم انتخاب کنید، یا یک پوشه‌ی کامل را اضافه کنید. وزن‌های هر خانواده خودکار شناسایی می‌شوند.</string>
+    <string name="fonts_help">برای حذف، روی خانواده یا وزن نگه دارید.</string>
+    <string name="weights_count">%1$d وزن</string>
+    <string name="importing">در حال افزودن فونت‌ها…</string>
+    <string name="import_progress">%1$d از %2$d فایل</string>
+    <string name="import_result">%1$d وزن جدید در %2$d خانواده اضافه شد.</string>
+    <string name="import_dupes">\n%1$d مورد تکراری بود.</string>
+    <string name="import_invalid">\n%1$d فایل نامعتبر یا پشتیبانی‌نشده بود.</string>
+    <string name="delete_family">حذف کل خانواده‌ی «%1$s»؟</string>
+    <string name="delete_style">حذف وزن «%1$s»؟</string>
+    <string name="preview_text">فونت استوری ۱۲۳ Aa</string>
+</resources>

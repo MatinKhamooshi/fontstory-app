@@ -1,0 +1,22 @@
+# Build output
+build/
+.gradle/
+.kotlin/
+*.apk
+*.aab
+*.idsig
+
+# Local machine config
+local.properties
+.idea/
+*.iml
+.DS_Store
+
+# Signing secrets — NEVER commit
+keystore/
+keystore.properties
+*.jks
+*.keystore
+
+# Downloaded test fonts (see README)
+testfonts
