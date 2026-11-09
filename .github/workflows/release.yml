@@ -72,13 +72,15 @@ jobs:
           tar xzf vazirmatn-*.tgz
 
       - name: Build & test
-        run: ./gradlew assembleRelease testReleaseUnitTest --no-daemon
+        run: ./gradlew assembleGithubRelease bundlePlayRelease testGithubReleaseUnitTest testPlayReleaseUnitTest --no-daemon
 
       - name: Collect APK
         id: apk
         run: |
           APK="FontStory-${{ steps.ver.outputs.version }}.apk"
-          cp app/build/outputs/apk/release/app-release*.apk "$APK"
+          cp app/build/outputs/apk/github/release/app-github-release*.apk "$APK"
+          cp app/build/outputs/bundle/playRelease/app-play-release.aab "FontStory-${{ steps.ver.outputs.version }}-play.aab"
+          echo "aab=FontStory-${{ steps.ver.outputs.version }}-play.aab" >> "$GITHUB_OUTPUT"
           echo "file=$APK" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -86,6 +88,13 @@ jobs:
           name: ${{ steps.apk.outputs.file }}
           path: ${{ steps.apk.outputs.file }}
           retention-days: 30
+
+      # Google Play bundle (upload manually in Play Console)
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ${{ steps.apk.outputs.aab }}
+          path: ${{ steps.apk.outputs.aab }}
+          retention-days: 90
 
       - name: Refuse unsigned release
         if: steps.ver.outputs.release == 'true' && env.HAS_KEY != 'true'
