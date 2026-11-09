@@ -16,12 +16,12 @@ val keystoreProps = Properties().apply {
 
 android {
     namespace = "ir.matinkhamooshi.fontstory"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ir.matinkhamooshi.fontstory"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         versionCode = vMajor * 10000 + vMinor * 100 + vPatch
         versionName = appVersion
     }
@@ -34,6 +34,19 @@ android {
                 keyAlias = keystoreProps.getProperty("keyAlias")
                 keyPassword = keystoreProps.getProperty("keyPassword")
             }
+        }
+    }
+
+    // github = sideloaded APK with update check (INTERNET only);
+    // play   = Google Play build: no network, no update code — Play delivers updates.
+    flavorDimensions += "dist"
+    productFlavors {
+        create("github") {
+            dimension = "dist"
+            isDefault = true
+        }
+        create("play") {
+            dimension = "dist"
         }
     }
 

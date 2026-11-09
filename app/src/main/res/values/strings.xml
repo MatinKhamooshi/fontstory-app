@@ -72,10 +72,5 @@
     <string name="update_checking">در حال بررسی نسخه‌ی جدید…</string>
     <string name="update_none">از آخرین نسخه استفاده می‌کنید.</string>
     <string name="update_check_failed">بررسی به‌روزرسانی ناموفق بود. اتصال اینترنت را بررسی کنید.</string>
-    <string name="update_downloading">دانلود نسخه‌ی %1$s</string>
-    <string name="update_download_failed">دانلود ناموفق بود. دوباره تلاش کنید.</string>
-    <string name="update_verify_failed">فایل دانلودشده تأیید نشد و نصب نمی‌شود.</string>
-    <string name="update_install_failed">نصب به‌روزرسانی ناموفق بود.</string>
-    <string name="update_permission">برای نصب به‌روزرسانی، یک‌بار اجازه‌ی «نصب برنامه‌های ناشناس» را برای فونت استوری روشن کنید و بعد برگردید.</string>
-    <string name="update_open_settings">باز کردن تنظیمات</string>
+    <string name="update_browser_hint">فایل نسخه‌ی جدید در مرورگر دانلود می‌شود؛ بعد از دانلود، روی آن بزنید تا نصب شود.</string>
 </resources>

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Internet is used ONLY to check/download updates from this app's GitHub Releases (HTTPS only). -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Lets the app hand a verified update APK to the system installer (user still confirms). -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!-- No storage permission: images are saved through MediaStore. -->
+    <!-- No permissions in the base app. The GitHub flavor adds INTERNET for update checks only.
+         Images are saved through MediaStore, so no storage permission is needed. -->
 
     <application
         android:allowBackup="false"
@@ -61,8 +58,5 @@
                 <data android:mimeType="application/vnd.ms-opentype" />
             </intent-filter>
         </activity>
-        <receiver
-            android:name=".update.InstallStatusReceiver"
-            android:exported="false" />
     </application>
 </manifest>

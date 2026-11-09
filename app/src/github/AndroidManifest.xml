@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- GitHub build only: used to check this app's GitHub Releases for a newer version (HTTPS). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

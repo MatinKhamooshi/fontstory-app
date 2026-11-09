@@ -45,12 +45,7 @@ import ir.matinkhamooshi.fontstory.ui.FamilyAdapter
 import ir.matinkhamooshi.fontstory.ui.StyledEditText
 import ir.matinkhamooshi.fontstory.ui.UiKit
 import ir.matinkhamooshi.fontstory.ui.WeightAdapter
-import ir.matinkhamooshi.fontstory.update.UpdateInfo
-import ir.matinkhamooshi.fontstory.update.UpdateInstaller
-import ir.matinkhamooshi.fontstory.update.Updater
-import android.provider.Settings
-import android.widget.ProgressBar
-import java.io.File
+import ir.matinkhamooshi.fontstory.update.AppUpdates
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.max
@@ -71,10 +66,6 @@ class MainActivity : Activity(), ArtboardView.Listener {
 
     private val handler = Handler(Looper.getMainLooper())
     private val io: ExecutorService = Executors.newSingleThreadExecutor()
-    private val net: ExecutorService = Executors.newSingleThreadExecutor()
-    private var pendingApk: File? = null
-    private var pendingInfo: UpdateInfo? = null
-    private var updateDialogShown = false
     private val prefs by lazy { getSharedPreferences("app", MODE_PRIVATE) }
     private val doc: Document get() = artboard.doc
 
@@ -123,18 +114,11 @@ class MainActivity : Activity(), ArtboardView.Listener {
         setupControls()
         setupBack()
         showEditor(null)
-        if (savedInstanceState == null) checkForUpdate(silent = true)
+        if (savedInstanceState == null) AppUpdates.check(this, silent = true)
     }
 
     override fun onResume() {
         super.onResume()
-        // Returning from the "install unknown apps" settings screen.
-        val apk = pendingApk
-        val info = pendingInfo
-        if (apk != null && info != null && packageManager.canRequestPackageInstalls()) {
-            pendingApk = null; pendingInfo = null
-            installUpdate(apk, info)
-        }
         if (FontLibrary.version != libVersion) {
             libVersion = FontLibrary.version
             families = FontLibrary.families()
@@ -154,7 +138,6 @@ class MainActivity : Activity(), ArtboardView.Listener {
     }
 
     override fun onDestroy() {
-        net.shutdownNow()
         io.shutdown()
         super.onDestroy()
     }
@@ -455,7 +438,7 @@ class MainActivity : Activity(), ArtboardView.Listener {
             menu.add(0, 1, 0, R.string.menu_artboard)
             menu.add(0, 2, 1, R.string.menu_bg)
             menu.add(0, 3, 2, R.string.menu_clear)
-            menu.add(0, 4, 3, R.string.menu_update)
+            if (AppUpdates.ENABLED) menu.add(0, 4, 3, R.string.menu_update)
             menu.add(0, 5, 4, R.string.menu_about)
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -469,7 +452,7 @@ class MainActivity : Activity(), ArtboardView.Listener {
                             artboard.select(null); doc.layers.clear(); artboard.invalidate(); scheduleSave()
                         }
                         .setNegativeButton(R.string.cancel, null).show()
-                    4 -> checkForUpdate(silent = false)
+                    4 -> AppUpdates.check(this@MainActivity, silent = false)
                     5 -> aboutDialog()
                 }
                 true
@@ -562,115 +545,6 @@ class MainActivity : Activity(), ArtboardView.Listener {
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE))
         } catch (_: Exception) {
-        }
-    }
-
-    // ---------------- updates ----------------
-
-    private fun updatesDir() = File(cacheDir, "updates").apply { mkdirs() }
-
-    private fun checkForUpdate(silent: Boolean) {
-        if (!silent) toast(R.string.update_checking)
-        val current = Updater.currentVersionCode(this)
-        net.execute {
-            val result = runCatching { Updater.check(current) }
-            runOnUiThread {
-                if (isFinishing || isDestroyed) return@runOnUiThread
-                val info = result.getOrNull()
-                when {
-                    info != null -> showUpdateDialog(info)
-                    silent -> Unit
-                    result.isFailure -> toast(R.string.update_check_failed)
-                    else -> toast(R.string.update_none)
-                }
-            }
-        }
-    }
-
-    private fun showUpdateDialog(info: UpdateInfo) {
-        if (updateDialogShown) return
-        updateDialogShown = true
-        val notes = info.notes.lines()
-            .filterNot { it.isBlank() }
-            .joinToString("\n") { it.trim().removePrefix("### ").replace(Regex("^[-*] "), "• ") }
-            .take(1200)
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.update_title, info.version))
-            .setMessage(getString(R.string.update_message) + if (notes.isNotEmpty()) "\n\n$notes" else "")
-            .setPositiveButton(R.string.update_now) { _, _ -> downloadUpdate(info) }
-            .setNegativeButton(R.string.update_later, null)
-            .setOnDismissListener { updateDialogShown = false }
-            .show()
-    }
-
-    private fun downloadUpdate(info: UpdateInfo) {
-        val dir = updatesDir()
-        Updater.cleanup(dir)
-        val apk = File(dir, "FontStory-${info.version}.apk")
-        val bar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply { max = 100 }
-        val label = TextView(this)
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            val p = UiKit.dp(this@MainActivity, 24)
-            setPadding(p, p, p, p / 2)
-            addView(bar); addView(label)
-        }
-        val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
-        val dlg = AlertDialog.Builder(this)
-            .setTitle(getString(R.string.update_downloading, info.version))
-            .setView(box)
-            .setCancelable(false)
-            .setNegativeButton(R.string.cancel) { _, _ -> cancelled.set(true) }
-            .show()
-        net.execute {
-            var lastPct = -1
-            val result = runCatching {
-                Updater.download(info, apk, { done, total ->
-                    val pct = (done * 100 / total.coerceAtLeast(1)).toInt()
-                    if (pct != lastPct) {
-                        lastPct = pct
-                        runOnUiThread { bar.progress = pct; label.text = "$pct٪  ·  ${done / 1024 / 1024}/${total / 1024 / 1024} MB" }
-                    }
-                }, { cancelled.get() })
-                if (!Updater.verifyApk(this, apk, info)) {
-                    apk.delete()
-                    throw SecurityException("verification failed")
-                }
-            }
-            runOnUiThread {
-                if (isFinishing || isDestroyed) return@runOnUiThread
-                dlg.dismiss()
-                val err = result.exceptionOrNull()
-                when {
-                    err == null -> installUpdate(apk, info)
-                    cancelled.get() -> Unit
-                    err is SecurityException -> toast(R.string.update_verify_failed)
-                    else -> toast(R.string.update_download_failed)
-                }
-            }
-        }
-    }
-
-    private fun installUpdate(apk: File, info: UpdateInfo) {
-        if (!packageManager.canRequestPackageInstalls()) {
-            pendingApk = apk; pendingInfo = info
-            AlertDialog.Builder(this)
-                .setMessage(R.string.update_permission)
-                .setPositiveButton(R.string.update_open_settings) { _, _ ->
-                    try {
-                        startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName")))
-                    } catch (_: Exception) {
-                        toast(R.string.update_install_failed)
-                    }
-                }
-                .setNegativeButton(R.string.cancel) { _, _ -> pendingApk = null; pendingInfo = null }
-                .show()
-            return
-        }
-        saveNow()
-        net.execute {
-            val r = runCatching { UpdateInstaller.install(applicationContext, apk) }
-            if (r.isFailure) runOnUiThread { toast(R.string.update_install_failed) }
         }
     }
 
