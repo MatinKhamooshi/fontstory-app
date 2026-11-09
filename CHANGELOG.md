@@ -5,6 +5,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-09
+
+### Changed
+- Updates now follow Google Play policy: the app only checks GitHub Releases and opens the signed APK link in the browser; Android's own installer installs it. The app no longer downloads or installs code itself (this was why Play Protect flagged 1.1.0).
+- Target Android 16 (API level 36), as now required by Google Play.
+
+### Added
+- Two builds from the same code: **github** (sideloaded APK with update check) and **play** (Google Play bundle with no network access and no update code — Play delivers updates).
+- Privacy policy (`PRIVACY.md`) for the Play Console listing.
+
+### Removed
+- `REQUEST_INSTALL_PACKAGES` permission and the in-app installer. The Play build has no permissions at all; the GitHub build only has `INTERNET` for the update check.
+
 ## [1.1.0] - 2026-11-09
 
 ### Added
@@ -29,6 +42,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: 
 - Auto-save of the current design.
 - Defensive font parser (bounds-checked, size-limited), no permissions, no internet access, no third-party runtime libraries.
 
-[Unreleased]: https://github.com/MatinKhamooshi/fontstory-app/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/MatinKhamooshi/fontstory-app/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/MatinKhamooshi/fontstory-app/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/MatinKhamooshi/fontstory-app/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MatinKhamooshi/fontstory-app/releases/tag/v1.0.0
